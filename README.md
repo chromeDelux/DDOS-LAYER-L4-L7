@@ -1,22 +1,27 @@
 # DDOS-LAYER-L4-L7
-bypass everything
+# PaltalkDDOS ![](https://img.shields.io/badge/Version-3.6-brightgreen.svg) ![](https://img.shields.io/badge/license-GPLv2-blue.svg)
+ A script for using proxies to attack http(s) server. and L4
 
-Donate Bitcon : 15qGwGdMNBuQwgCW8kZJE7WJUvPhTkNEWd
+# Donate Bitcon : 15qGwGdMNBuQwgCW8kZJE7WJUvPhTkNEWd
+ 
+ News:
+- [x] Added Output Indicator
+- [x] Added Url Parser
 
-PaltalkDDos
+ Info:
+- [x] Using Python2
 
-Một tập lệnh Python để DDOS một trang web bằng phương pháp nhiều phương pháp HTTP Flood, một trang web bình thường chỉ cần 5s để sập hoàn toàn!
+## Showcase
 
-Cách Dùng:
-Tập lệnh này có thể hoạt động cả trên Windows lẫn Android (Termux), dưới đây là hướng dẫn:
+![](https://i0.wp.com/s1.uphinh.org/2020/12/29/tttttttt.png)
 
+## Install
 
-pip install requirements.txt
+    pip install requests pysocks
+    git clone https://github.com/VN-FR/DDOS-LAYER-L4-L7
+    cd CC-attack
 
-python PaltalkDDOS.py
+## Usage
 
-Important!!!
-This script is for educational purposes only. I am not responsible for the damage you cause while using this script!
+    python PaltalkDDOS.py
 
-
-PaltalkDDOS.py by VN (Paltalk)
