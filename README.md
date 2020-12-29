@@ -19,7 +19,7 @@
 
     pip install requests pysocks
     git clone https://github.com/VN-FR/DDOS-LAYER-L4-L7
-    cd CC-attack
+    cd DDOS-LAYER-L4-L7
 
 ## Usage
 
