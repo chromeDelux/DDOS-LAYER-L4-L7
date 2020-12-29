@@ -17,7 +17,7 @@
 
 ## Install
 
-    pip install requests pysocks
+    python -m pip install --upgrade pip pysocks request bs4 requests js2py cfscrape beautifulsoup4 colorama wget scapy PySocks
     git clone https://github.com/VN-FR/DDOS-LAYER-L4-L7
     cd DDOS-LAYER-L4-L7
 
