@@ -1,7 +1,10 @@
 # DDOS-LAYER-L4-L7
 bypass everything
+
 Donate Bitcon : 15qGwGdMNBuQwgCW8kZJE7WJUvPhTkNEWd
+
 PaltalkDDos
+
 Một tập lệnh Python để DDOS một trang web bằng phương pháp nhiều phương pháp HTTP Flood, một trang web bình thường chỉ cần 5s để sập hoàn toàn!
 
 Cách Dùng:
